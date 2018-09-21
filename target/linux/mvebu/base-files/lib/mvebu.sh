@@ -23,6 +23,15 @@ mvebu_board_detect() {
 	*"Marvell 8040 MACHIATOBin")
 		name="marvell,armada8040-mcbin"
 		;;
+	*"Marvell Armada 8040 DB board")
+		name="marvell,armada8040-db"
+		;;
+	*"Marvell Armada 7040 DB board")
+		name="marvell,armada7040-db"
+		;;
+	*"SolidRun ClearFog GT 8K")
+		name="solidrun,clearfog-gt-8k"
+		;;
 	*"Globalscale Mirabox")
 		name="mirabox"
 		;;
