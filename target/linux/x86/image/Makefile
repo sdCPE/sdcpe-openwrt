@@ -69,6 +69,10 @@ ifneq ($(CONFIG_GRUB_IMAGES),)
 	# left here because the image builder doesnt need these
 	$(INSTALL_DIR) $(KDIR)/root.grub/boot/grub $(KDIR)/grub2 $(KDIR)/root.grub$(dir $(GRUB_KERNEL))
 	$(CP) $(KDIR)/bzImage $(KDIR)/root.grub$(GRUB_KERNEL)
+    ifeq ($(CONFIG_TARGET_x86_efi),y)
+		echo '$(notdir $(GRUB_KERNEL)) $(strip $(call Image/cmdline/$(1)) $(BOOTOPTS) $(GRUB_CONSOLE_CMDLINE))' > $(KDIR)/root.grub$(dir $(GRUB_KERNEL))boot.nsh
+		$(CP) ./startup.nsh $(KDIR)/root.grub/
+    endif
 	grub-mkimage \
 		-p /boot/grub \
 		-d $(STAGING_DIR_HOST)/lib/grub/i386-pc \

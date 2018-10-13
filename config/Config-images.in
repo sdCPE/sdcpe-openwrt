@@ -217,9 +217,16 @@ menu "Target Images"
 		depends on GRUB_SERIAL != ""
 		default n
 
+	config TARGET_x86_efi
+		bool "x86 EFI bios support"
+		depends on GRUB_IMAGES
+		help
+		  This will make images bootable on EFI systems
+
 	config GRUB_KERNEL
 		string "Set kernel path on boot partition"
 		depends on GRUB_IMAGES
+		default "/efi/boot/linux.efi" if TARGET_x86_efi
 		default "/boot/vmlinuz"
 		help
 		  If you don't know, just leave it blank.
