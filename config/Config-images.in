@@ -216,6 +216,13 @@ menu "Target Images"
 		depends on GRUB_SERIAL != ""
 		default n
 
+	config GRUB_KERNEL
+		string "Set kernel path on boot partition"
+		depends on GRUB_IMAGES
+		default "/boot/vmlinuz"
+		help
+		  If you don't know, just leave it blank.
+
 	config GRUB_BOOTOPTS
 		string "Extra kernel boot options"
 		depends on GRUB_IMAGES
