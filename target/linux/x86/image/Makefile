@@ -47,6 +47,7 @@ ROOTPART:=$(if $(ROOTPART),$(ROOTPART),PARTUUID=$(SIGNATURE)-02)
 
 GRUB_TIMEOUT:=$(call qstrip,$(CONFIG_GRUB_TIMEOUT))
 GRUB_TITLE:=$(call qstrip,$(CONFIG_GRUB_TITLE))
+GRUB_KERNEL:=$(call qstrip,$(CONFIG_GRUB_KERNEL))
 
 ifneq ($(CONFIG_TARGET_x86_xen_domu),)
   GRUB_ROOT = xen/xvda,msdos1
@@ -66,8 +67,8 @@ ifneq ($(CONFIG_GRUB_IMAGES),)
 
   define Image/Build/grub2
 	# left here because the image builder doesnt need these
-	$(INSTALL_DIR) $(KDIR)/root.grub/boot/grub $(KDIR)/grub2
-	$(CP) $(KDIR)/bzImage $(KDIR)/root.grub/boot/vmlinuz
+	$(INSTALL_DIR) $(KDIR)/root.grub/boot/grub $(KDIR)/grub2 $(KDIR)/root.grub$(dir $(GRUB_KERNEL))
+	$(CP) $(KDIR)/bzImage $(KDIR)/root.grub$(GRUB_KERNEL)
 	grub-mkimage \
 		-p /boot/grub \
 		-d $(STAGING_DIR_HOST)/lib/grub/i386-pc \
@@ -84,6 +85,7 @@ ifneq ($(CONFIG_GRUB_IMAGES),)
 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
 		-e 's#@ROOT@#$(GRUB_ROOT)#g' \
 		-e 's#@TITLE@#$(GRUB_TITLE)#g' \
+		-e 's#@KERNEL@#$(GRUB_KERNEL)#g' \
 		./grub.cfg > $(KDIR)/root.grub/boot/grub/grub.cfg
 	-$(CP) $(STAGING_DIR_ROOT)/boot/. $(KDIR)/root.grub/boot/
 	PADDING="$(CONFIG_TARGET_IMAGES_PAD)" SIGNATURE="$(SIGNATURE)" PATH="$(TARGET_PATH)" $(SCRIPT_DIR)/gen_image_generic.sh \
@@ -105,7 +107,7 @@ endef
 
 define Image/Build/iso
 	$(INSTALL_DIR) $(KDIR)/root.grub/boot/grub $(KDIR)/grub2
-	$(CP) $(KDIR)/bzImage $(KDIR)/root.grub/boot/vmlinuz
+	$(CP) $(KDIR)/bzImage $(KDIR)/root.grub$(GRUB_KERNEL)
 	grub-mkimage \
 		-p /boot/grub \
 		-d $(STAGING_DIR_HOST)/lib/grub/i386-pc \
@@ -123,6 +125,7 @@ define Image/Build/iso
 		-e 's#@CMDLINE@#root=/dev/sr0 rootfstype=iso9660 rootwait $(strip $(call Image/cmdline/$(1)) $(BOOTOPTS) $(GRUB_CONSOLE_CMDLINE))#g' \
 		-e 's#@TIMEOUT@#$(GRUB_TIMEOUT)#g' \
 		-e 's#@TITLE@#$(GRUB_TITLE)#g' \
+		-e 's#@KERNEL@#$(GRUB_KERNEL)#g' \
 		./grub-iso.cfg > $(KDIR)/root.grub/boot/grub/grub.cfg
 	-$(CP) $(STAGING_DIR_ROOT)/boot/. $(KDIR)/root.grub/boot/
 	mkisofs -R -b boot/grub/eltorito.img -no-emul-boot -boot-info-table \
