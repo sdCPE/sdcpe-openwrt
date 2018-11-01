@@ -104,7 +104,8 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
  #include <linux/err.h>
  #include <linux/of.h>
  
-@@ -835,6 +836,32 @@ void deregister_mtd_parser(struct mtd_pa
+@@ -834,6 +835,36 @@ void deregister_mtd_parser(struct mtd_pa
+ }
  EXPORT_SYMBOL_GPL(deregister_mtd_parser);
  
  /*
@@ -129,6 +130,8 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
 +					      count);
 +	if (count < 0)
 +		return NULL;
++
++	pr_warn("Support for the generic \"linux,part-probe\" has been deprecated and will be removed soon");
 +
 +	return res;
 +}

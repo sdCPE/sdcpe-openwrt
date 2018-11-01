@@ -21,9 +21,9 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
 
 --- a/Documentation/devicetree/bindings/mtd/nand.txt
 +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -44,6 +44,22 @@ Optional NAND chip properties:
- 		     used by the upper layers, and you want to make your NAND
- 		     as reliable as possible.
+@@ -49,6 +49,22 @@ Optional NAND chip properties:
+ 
+ - nand-rb: shall contain the native Ready/Busy ids.
  
 +- linux,part-probe: list of name as strings of the partition parser
 +		    which should be used to parse the partition table.
@@ -46,7 +46,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
  errors per {size} bytes".
 --- a/drivers/mtd/maps/physmap_of_core.c
 +++ b/drivers/mtd/maps/physmap_of_core.c
-@@ -114,37 +114,9 @@ static struct mtd_info *obsolete_probe(s
+@@ -115,37 +115,9 @@ static struct mtd_info *obsolete_probe(s
  static const char * const part_probe_types_def[] = {
  	"cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
  
@@ -59,7 +59,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
 -	if (count < 0)
 -		return part_probe_types_def;
 -
--	res = kzalloc((count + 1) * sizeof(*res), GFP_KERNEL);
+-	res = kcalloc(count + 1, sizeof(*res), GFP_KERNEL);
 -	if (!res)
 -		return NULL;
 -
@@ -84,7 +84,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
  	const struct of_device_id *match;
  	struct device_node *dp = dev->dev.of_node;
  	struct resource res;
-@@ -310,14 +282,8 @@ static int of_flash_probe(struct platfor
+@@ -316,14 +288,8 @@ static int of_flash_probe(struct platfor
  
  	info->cmtd->dev.parent = &dev->dev;
  	mtd_set_of_node(info->cmtd, dp);
@@ -110,7 +110,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
  #include <linux/err.h>
  #include <linux/of.h>
  
-@@ -834,6 +835,37 @@ void deregister_mtd_parser(struct mtd_pa
+@@ -786,6 +787,36 @@ void deregister_mtd_parser(struct mtd_pa
  }
  EXPORT_SYMBOL_GPL(deregister_mtd_parser);
  
@@ -140,7 +140,6 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
 +		return NULL;
 +
 +	pr_warn("Support for the generic \"linux,part-probe\" has been deprecated and will be removed soon");
-+	BUILD_BUG_ON(LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0));
 +
 +	return res;
 +}
@@ -148,7 +147,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
  /*
   * Do not forget to update 'parse_mtd_partitions()' kerneldoc comment if you
   * are changing this array!
-@@ -983,6 +1015,13 @@ int parse_mtd_partitions(struct mtd_info
+@@ -938,6 +969,13 @@ int parse_mtd_partitions(struct mtd_info
  	struct mtd_partitions pparts = { };
  	struct mtd_part_parser *parser;
  	int ret, err = 0;
@@ -162,7 +161,7 @@ Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
  
  	if (!types)
  		types = mtd_is_partition(master) ? default_subpartition_types :
-@@ -1024,6 +1063,7 @@ int parse_mtd_partitions(struct mtd_info
+@@ -979,6 +1017,7 @@ int parse_mtd_partitions(struct mtd_info
  		if (ret < 0 && !err)
  			err = ret;
  	}
