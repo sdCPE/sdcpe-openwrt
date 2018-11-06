@@ -52,6 +52,14 @@ preinit_set_mac_address() {
 				ip link set eth2 name cpu
 			;;
 		esac
+		case "$(readlink /sys/class/net/lan1)" in
+			*f412a200*)
+				ip link set lan1 name wan1
+				ip link set lan2 name wan2
+				ip link set lan3 name wan3
+				ip link set lan4 name wan4
+			;;
+		esac
 	esac
 }
 

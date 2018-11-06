@@ -56,8 +56,8 @@ marvell,armada7040-db)
 	ucidef_set_interfaces_lan_wan "eth0 eth2" "eth1"
 	;;
 solidrun,clearfog-gt-8k)
-	ucidef_set_interface_wan "eth0"
-	ucidef_set_interface_lan "lan1 lan2 lan3 lan4 sfp0"
+	ucidef_set_interface_lan "eth0"
+	ucidef_set_interface_wan "wan1 wan2 wan3 wan4 sfp0"
 	;;
 *)
 	ucidef_set_interface_lan "eth0"
