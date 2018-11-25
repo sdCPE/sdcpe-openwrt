@@ -8,14 +8,14 @@ PKG_LICENSE_FILES:=
 
 PKG_SOURCE_URL:=https://github.com/greearb/ath10k-ct.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_DATE:=2018-03-16
-PKG_SOURCE_VERSION:=30827f7d5b9841905c4efe918da2d95fc518c921
-PKG_MIRROR_HASH:=aac023d7f9b09becf27058b1d09ae6d068b14bb6f10c5b5a248c7ee5ecff04dc
+PKG_SOURCE_DATE:=2018-11-01
+PKG_SOURCE_VERSION:=6c3a6262317f3240013014e79a570693009c0235
+PKG_MIRROR_HASH:=67bb1c81518aea5880757d521023db25190d9cca21ba67bf1c7e577efd287430
 
 # Build the 4.13 ath10k-ct driver version.  Other options are "-4.9", or
 # leave un-defined for 4.7 kernel.  Probably this should match as closely as
 # possible to whatever mac80211 backports version is being used.
-CT_KVER="-4.13"
+CT_KVER="-4.19"
 
 PKG_MAINTAINER:=Ben Greear <greearb@candelatech.com>
 PKG_BUILD_PARALLEL:=1
@@ -50,7 +50,7 @@ ifdef CONFIG_PACKAGE_MAC80211_MESH
   NOSTDINC_FLAGS += -DCONFIG_MAC80211_MESH
 endif
 
-CT_MAKEDEFS += CONFIG_ATH10K=m CONFIG_ATH10K_PCI=m
+CT_MAKEDEFS += CONFIG_ATH10K=m CONFIG_ATH10K_PCI=m CONFIG_ATH10K_CE=y
 
 # This AHB logic is needed for IPQ4019 radios
 CT_MAKEDEFS += CONFIG_ATH10K_AHB=m
